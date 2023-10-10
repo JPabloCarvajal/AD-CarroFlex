@@ -4,9 +4,18 @@ package Data;
 public class Cars {
     String Brand, Plaque, Color, Proprietarie, Arrendatario,Date_p, Date_g, State;
     private int crPrecio, km;
+    private int contadorAlquileres;
+
+    public int getContadorAlquileres() {
+        return contadorAlquileres;
+    }
+
+    public void setContadorAlquileres(int contadorAlquileres) {
+        this.contadorAlquileres = contadorAlquileres;
+    }
     
     
-    public Cars(String Brand, String Color, String Plaque, String State, int km ,String Proprietarie, String Arrendatario,String Date_p, String Date_g, int crPrecio){
+    public Cars(String Brand, String Color, String Plaque, String State, int km ,String Proprietarie, String Arrendatario,String Date_p, String Date_g, int crPrecio, int contadorAlquileres){
         this.Brand=Brand;
         this.Color=Color;
         this.Plaque=Plaque;
@@ -17,6 +26,7 @@ public class Cars {
         this.Date_p=Date_p;
         this.Date_g=Date_g;
         this.crPrecio = crPrecio;
+        this.contadorAlquileres = contadorAlquileres;
     }
     public String getBrand(){
         return Brand;
@@ -78,6 +88,5 @@ public class Cars {
     public void setPrecio(int precio){
         this.crPrecio = precio;
     }
-    
 
 }
