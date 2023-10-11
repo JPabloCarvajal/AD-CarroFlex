@@ -1,5 +1,7 @@
 package Data;
 
+import javax.swing.JOptionPane;
+
 
 public class Cars {
     String Brand, Plaque, Color, Proprietarie, Arrendatario,Date_p, Date_g, State;
@@ -88,5 +90,8 @@ public class Cars {
     public void setPrecio(int precio){
         this.crPrecio = precio;
     }
+        public void showCarInfo() {
+        String info = "Marca: " + getBrand() + "\n" + "Color: " + getColor() + "\n" + "Placa: " + getPlaque() + "\n" + "Arrendatario: " + getArrendatario() + "\n" + "Fecha de arriendo: " + getDate_p() + "\n" + "Fecha de devolución: " + getDate_g();
+        JOptionPane.showMessageDialog(null, info);
 
-}
+        }}

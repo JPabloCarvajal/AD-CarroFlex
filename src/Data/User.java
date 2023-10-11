@@ -1,5 +1,7 @@
 package Data;
 
+import java.util.List;
+
 
 public class User {
     private String Tipo, Name, LastN, Phone, Doc, UserN, Passw;
@@ -63,6 +65,23 @@ public class User {
     }
     public void setPrice(int Pric){
         this.Price=Pric;
+    }
+    //NUEVO
+    private String name;
+    private int price;
+
+    // Constructor, getters y setters
+
+    public void showRentInfo(List<Cars> inventory) {
+        for (Cars car : inventory) {
+            if (car.getArrendatario().equals(getName())) {
+                car.showCarInfo();
+            }
+        }
+    }
+
+    public void rechargeBalance(int amount) {
+        setPrice(getPrice() + amount);
     }
 }
 
