@@ -6,13 +6,13 @@ CarroFlex es un software de gestión de alquiler de vehículos diseñado para op
 
 ## Características Clave
 
-- Gestión de flotas de vehículos.
+- Gestión de vehículos.
 - Automatización de reservas y facturación.
 - Personalización para adaptarse a tus necesidades específicas.
 
 ## Cómo Empezar
 
-1. Clona este repositorio a tu máquina local.
+1. Clona este repositorio a tu local.
 2. Configura CarroFlex según las necesidades de tu empresa.
 
 ## Contribuciones
