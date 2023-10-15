@@ -1,6 +1,6 @@
 package Vista;
 import Data.*;
-import java.io.*;
+import Metodos.*;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
@@ -9,7 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 public class Main {
-     private static Date validarFecha(String fecha) {
+    static Registro metodo=new Registro();
+    private static Date validarFecha(String fecha) {
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         String[] partesFecha = fecha.split("/");              
         if (partesFecha.length != 3) {
@@ -26,46 +27,19 @@ public class Main {
                 return null;} // Fecha no válida
             return fechaParseada;
         } catch (ParseException | NumberFormatException ex) {
-            return null;}} // Fecha inválida                                           
-    public static void leerArchivo(List<User> nue_user) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("Usuario.txt"))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split("\\-");
-                if (parts.length == 8) {
-                    String selec = parts[0];
-                    String Docu = parts[1];
-                    String nam = parts[2];
-                    String Last = parts[3];
-                    String Pho = parts[4];
-                    String Use= parts[5];
-                    String Pass = parts[6];
-                    int Pric = Integer.parseInt(parts[7]);
-                     nue_user.add(new User(selec, Docu, nam, Last, Pho, Use, Pass,Pric));}}     
-            JOptionPane.showMessageDialog(null, "Datos leídos del usuario ");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error al leer el archivo");}}  
-    public static void guardarEnArchivo(List<User> nue_user) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Usuario.txt"))) {
-            for (User us : nue_user) {
-                String usNuevo = us.getTipo()+ "-" + us.getDoc() + "-" + us.getName() + "-" + us.getLastN()+ "-" + us.getPhone() + "-" + us.getUserN() +  "-" +us.getPassw() + "-" + us.getPrice(); 
-                writer.write(usNuevo);
-                writer.newLine();}      
-            JOptionPane.showMessageDialog(null, "Datos guardados");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error al guardar datos");}}  
+            return null;}} // Fecha inválida                                             
     public static void main(String[] args) {
         int x;
-        long valor_total= 0,valor_total2=0;                
-        List<User> nue_user = new ArrayList<User>();// En este apartado se están cargando por defecto usuarios de prueba, los cuales servirán para testear el funcionamiento base del programa
-        leerArchivo(nue_user);   
-        List<Cars> inventory = new ArrayList<Cars>();
+        long valor_total= 0,valor_total2= 0;                
+        List<User> nue_user = new ArrayList <User>();// En este apartado se están cargando por defecto usuarios de prueba, los cuales servirán para testear el funcionamiento base del programa
+        metodo.leerArchivo(nue_user);
+        List<Cars> inventory = new ArrayList <Cars>();
         inventory.add(new Cars("Mazda", "Blanco", "CFE234","Bien",0,"Camilo", "||", "Sin arrendar", "||", 1000, 0));
         inventory.add(new Cars("Ferrari", "Gris", "GRE654","Regular",0,"Pedro", "||", "Sin arrendar", "||", 2000, 0));
         inventory.add(new Cars("Jeep", "Negro", "HTE723","Excelente",50,"Pedro", "Luz", "22/2/2022", "22/2/2023", 900, 1));     
         String Menu,Menu_cl,Menu_dño,Menu_fil;// Se están declarando variables
         Menu = "1. Iniciar Sesión \n2. Registrarse\n3. Salir";
-        Menu_cl = "1. Reservar Auto\n2. Ver reserv\n3. Devolver Auto\n4. Agregar dinero\n5. Cerrar sesión";
+        Menu_cl = "1. Reservar Auto\n2. Ver reserv\n3. Devolver Auto\n4. Agregar dinero\n5. Revisar saldo\n6. Cerrar sesión";
         Menu_dño = "1.Autos alquilados\n2. Añadir automóviles\n3. Remover automovil\n4. Revisar saldo\n5.Cerrar sesión";
         Menu_fil= "1. Mostrar todos los autos\n2. Filtrar por marca\n3. Filtrar por color\n";
         int cnt = 1;
@@ -152,21 +126,17 @@ public class Main {
                                             inventory.remove(autslc_p);
                                             JOptionPane.showMessageDialog(null,"Coche eliminado exitosamente.");
                                             break;
-                                    }else{break;    }   }
+                                    }else{break;}   }
                                } else {
                                    JOptionPane.showMessageDialog(null,"No tienes coches.");
                                    break;} 
                                    }men_dño = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_dño));}
                                    if(men_dño==4){
-                                   for(User plata: nue_user){
-                                     if(plata.getName().equals(nombre)){
-                                     JOptionPane.showMessageDialog(null, plata.getPrice()); 
-                                     break;}          
-                                    break;}
+                                   JOptionPane.showMessageDialog(null,"Saldo actual: "+Login_usern2.getPrice());
                                 men_dño = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_dño));}}} 
                     if ("Arrendatario".equals(tip)) {
                         int men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));
-                        while (men_cl < 5) {
+                        while (men_cl < 6) {
                             if (men_cl == 1) {
                                 List<Cars> Free = new ArrayList<Cars>();
                                 for (Cars inv : inventory) {
@@ -327,6 +297,10 @@ public class Main {
                                                     if(buscar.getName().equals(autslc_m.getProprietarie())){
                                                      busqueda = buscar; 
                                                      busqueda.setPrice((int)valor_total);} }
+                                                for (User buscar : nue_user){
+                                                    if(buscar.getName().equals(autslc_m.getProprietarie())){
+                                                     busqueda = buscar; 
+                                                     busqueda.setPrice(busqueda.getPrice()+(int)valor_total);} }
                                                 JOptionPane.showMessageDialog(null, "Nuevo saldo "+Login_usern2.getPrice());
                                                 break;}      
                                             if(Login_usern2.getPrice() < valor_total){
@@ -414,7 +388,11 @@ public class Main {
                                                 for (User buscar : nue_user){
                                                     if(buscar.getName().equals(autslc_cl.getProprietarie())){
                                                      busqueda = buscar; 
-                                                     busqueda.setPrice((int)valor_total);}}                                           
+                                                     busqueda.setPrice((int)valor_total);}} 
+                                                for (User buscar : nue_user){
+                                                    if(buscar.getName().equals(autslc_cl.getProprietarie())){
+                                                     busqueda = buscar; 
+                                                     busqueda.setPrice(busqueda.getPrice()+(int)valor_total);} }
                                                 JOptionPane.showMessageDialog(null, "Nuevo saldo "+Login_usern2.getPrice());
                                                 break;
                                             }if(Login_usern2.getPrice() < valor_total){
@@ -527,33 +505,16 @@ public class Main {
                                 }catch(NumberFormatException e){
                                    JOptionPane.showMessageDialog(null, "Por favor, ingrese un número válido.");}
                                break;}
-                                men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));}}}} 
+                                men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));}
+                                if(men_cl==5){
+                                JOptionPane.showMessageDialog(null,"Saldo actual: "+Login_usern2.getPrice());
+                                men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));}
+                        }}} 
                 else {
                     JOptionPane.showMessageDialog(null, "Credenciales invalidas");}
             Menu_election = Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));}
             if (Menu_election == 2) {
-                for (int i = 0; i < 1; i++) {
-                    while(true){
-                    String[] opt = { "Arrendador", "Arrendatario" };
-                    String selec = (String) JOptionPane.showInputDialog(null, "Seleccione tipo de cuenta: ", "Tipo de cuenta", JOptionPane.PLAIN_MESSAGE, null, opt, opt[0]);
-                    if(selec==null){break;}                   
-                    String nam = JOptionPane.showInputDialog(null, "Ingrese su nombre: ");
-                    if(nam==null){continue;}
-                    String Last = JOptionPane.showInputDialog(null, "Ingrese su apellido");
-                    if(Last==null){continue;}
-                    String Pho = JOptionPane.showInputDialog(null, "Ingrese su numero telefonico");
-                    if(Pho==null){continue;}
-                    String Docu = JOptionPane.showInputDialog(null, "Ingrese su documento: ");
-                    if(Docu==null){continue;}
-                    String Use = JOptionPane.showInputDialog(null, "Nombre de usuario: ");
-                    if(Use==null){continue;}
-                    String Pass = JOptionPane.showInputDialog(null, "Contraseña: ");
-                    if(Pass==null){continue;}
-                    int Pric=0; 
-                    nue_user.add(new User(selec, Docu, nam, Last, Pho, Use, Pass,Pric));
-                    guardarEnArchivo(nue_user);
-                    JOptionPane.showMessageDialog(null, "Registro exitoso.");
-                    break;}}              
+                metodo.Registro();
                 Menu_election = Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));}
         } while (Menu_election != 3);
         JOptionPane.showMessageDialog(null, "Has salido de Carroflex");}}
