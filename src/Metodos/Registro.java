@@ -1,6 +1,8 @@
 package Metodos;
 import Vista.*;
 import Data.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -14,7 +16,6 @@ public class Registro {
         
         List<User> nue_user = new ArrayList<User>();// En este apartado se están cargando por defecto usuarios de prueba, los cuales servirán para testear el funcionamiento base del programa
         leerArchivo(nue_user);
-                    for (int i = 0; i < 1; i++) {
                     while(true){
                     String[] opt = { "Arrendador", "Arrendatario" };
                     String selec = (String) JOptionPane.showInputDialog(null, "Seleccione tipo de cuenta: ", "Tipo de cuenta", JOptionPane.PLAIN_MESSAGE, null, opt, opt[0]);
@@ -32,10 +33,11 @@ public class Registro {
                     String Pass = JOptionPane.showInputDialog(null, "Contraseña: ");
                     if(Pass==null){return;}
                     int Pric=0; 
-                    nue_user.add(new User(selec, Docu, nam, Last, Pho, Use, Pass,Pric));
+                    Map<Integer, Integer> expenses = new HashMap<>();
+                    nue_user.add(new User(selec, Docu, nam, Last, Pho, Use, Pass,Pric,expenses));
                     guardarEnArchivo(nue_user);
                     JOptionPane.showMessageDialog(null, "Registro exitoso.");
-                    break;}} 
+                    break;}
     }
     public static void leerArchivo(List<User> nue_user) {
         try (BufferedReader reader = new BufferedReader(new FileReader("Usuario.txt"))) {
@@ -51,7 +53,8 @@ public class Registro {
                     String Use= parts[5];
                     String Pass = parts[6];
                     int Pric = Integer.parseInt(parts[7]);
-                     nue_user.add(new User(selec, Docu, nam, Last, Pho, Use, Pass,Pric));}}     
+                    Map<Integer, Integer> expenses = new HashMap<>();
+                     nue_user.add(new User(selec, Docu, nam, Last, Pho, Use, Pass,Pric, expenses));}}     
             JOptionPane.showMessageDialog(null, "Datos leídos del usuario ");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "Error al leer el archivo");}} 

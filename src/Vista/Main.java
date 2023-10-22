@@ -2,6 +2,7 @@ package Vista;
 import Data.*;
 import Metodos.*;
 import java.util.List;
+import java.util.Calendar;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import java.text.ParseException;
@@ -10,6 +11,11 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 public class Main {
     static Registro metodo=new Registro();
+    private static int getYearFromDate(Date date) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(date);
+    return calendar.get(Calendar.YEAR);
+}
     private static Date validarFecha(String fecha) {
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         String[] partesFecha = fecha.split("/");              
@@ -39,7 +45,7 @@ public class Main {
         inventory.add(new Cars("Jeep", "Negro", "HTE723","Excelente",50,"Pedro", "Luz", "22/2/2022", "22/2/2023", 900, 1));     
         String Menu,Menu_cl,Menu_dño,Menu_fil;// Se están declarando variables
         Menu = "1. Iniciar Sesión \n2. Registrarse\n3. Salir";
-        Menu_cl = "1. Reservar Auto\n2. Ver reserv\n3. Devolver Auto\n4. Agregar dinero\n5. Revisar saldo\n6. Cerrar sesión";
+        Menu_cl = "1. Reservar Auto\n2. Ver reserva\n3. Devolver Auto\n4. Agregar dinero\n5. Revisar saldo\n6. Revisar gastos anuales\n7. Cerrar sesión";
         Menu_dño = "1.Autos alquilados\n2. Añadir automóviles\n3. Remover automovil\n4. Revisar saldo\n5.Cerrar sesión";
         Menu_fil= "1. Mostrar todos los autos\n2. Filtrar por marca\n3. Filtrar por color\n";
         int cnt = 1;
@@ -136,7 +142,7 @@ public class Main {
                                 men_dño = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_dño));}}} 
                     if ("Arrendatario".equals(tip)) {
                         int men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));
-                        while (men_cl < 6) {
+                        while (men_cl < 7) {
                             if (men_cl == 1) {
                                 List<Cars> Free = new ArrayList<Cars>();
                                 for (Cars inv : inventory) {
@@ -206,10 +212,14 @@ public class Main {
                                                         autslc.setArrendatario(cdn);
                                                         autslc.setDate_p(f1);
                                                         autslc.setDate_g(f2);
-                                                        autslc.setContadorAlquileres(autslc.getContadorAlquileres()+1);
+                                                        autslc.setContadorAlquileres(autslc.getContadorAlquileres()+1);                                                       
                                                         break;  } }
                                                 JOptionPane.showMessageDialog(null, "Renta exitosa");
-                                                Login_usern2.setPrice(Login_usern2.getPrice()- (int)valor_total);
+                                                Date fecha=validarFecha(f1);
+                                                int year = getYearFromDate(fecha);
+                                                int total=Login_usern2.getPrice()- (int)valor_total;
+                                                User.obtenerGastosParaAño(year,(int)valor_total);
+                                                Login_usern2.setPrice(total);
                                                 for (User buscar : nue_user){
                                                     if(buscar.getName().equals(autslc.getProprietarie())){
                                                      busqueda = buscar; 
@@ -291,6 +301,11 @@ public class Main {
                                                         autslc_m.setDate_g(f2);
                                                         autslc_m.setContadorAlquileres(autslc_m.getContadorAlquileres()+1);
                                                         break; } }
+                                                Date fecha=validarFecha(f1);
+                                                int year = getYearFromDate(fecha);
+                                                int total=Login_usern2.getPrice()- (int)valor_total;
+                                                User.obtenerGastosParaAño(year,(int)valor_total);
+                                                Login_usern2.setPrice(total);
                                                 JOptionPane.showMessageDialog(null, "Renta exitosa");
                                                 Login_usern2.setPrice(Login_usern2.getPrice()- (int)valor_total);
                                                 for (User buscar : nue_user){
@@ -384,7 +399,11 @@ public class Main {
                                                         autslc_cl.setContadorAlquileres(autslc_cl.getContadorAlquileres()+1);
                                                         break; } }
                                                 JOptionPane.showMessageDialog(null, "Renta exitosa");
-                                                Login_usern2.setPrice(Login_usern2.getPrice()- (int)valor_total);
+                                                Date fecha=validarFecha(f1);
+                                                int year = getYearFromDate(fecha);
+                                                int total=Login_usern2.getPrice()- (int)valor_total;
+                                                User.obtenerGastosParaAño(year,(int)valor_total);
+                                                Login_usern2.setPrice(total);
                                                 for (User buscar : nue_user){
                                                     if(buscar.getName().equals(autslc_cl.getProprietarie())){
                                                      busqueda = buscar; 
@@ -401,7 +420,8 @@ public class Main {
                                             } else {break;} } }
                                     } else if(Color==null){ break;}
                                     else{JOptionPane.showMessageDialog(null, "No hay coches disponibles con estas especificaciones.");
-                                         continue;} } }
+                                         continue;} 
+                                    break;} }
                                 men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));}  
                             if (men_cl == 2) {
                                 for (Cars name : inventory) {
@@ -509,6 +529,21 @@ public class Main {
                                 if(men_cl==5){
                                 JOptionPane.showMessageDialog(null,"Saldo actual: "+Login_usern2.getPrice());
                                 men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));}
+                                if(men_cl==6){
+                                    while(true){
+                                        try{
+                                        int año=Integer.parseInt(JOptionPane.showInputDialog(null,"Ingre el año a revisar: "));
+                                        if(Login_usern2.getExpenses().containsKey(año)){
+                                            JOptionPane.showMessageDialog(null,"Tus gastos en el año "+año+" son: "+"$"+Login_usern2.getExpenses().get(año));
+                                            break;
+                                        } else {
+                                            JOptionPane.showMessageDialog(null,"No tiene gastos en dicho año.");
+                                            break;
+                                        }
+                                        }catch(NumberFormatException e){JOptionPane.showMessageDialog(null,"Por favor, ingrese un año válido.");}
+                                    }
+                                    men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));
+                                }
                         }}} 
                 else {
                     JOptionPane.showMessageDialog(null, "Credenciales invalidas");}
@@ -517,4 +552,5 @@ public class Main {
                 metodo.Registro();
                 Menu_election = Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));}
         } while (Menu_election != 3);
-        JOptionPane.showMessageDialog(null, "Has salido de Carroflex");}}
+        JOptionPane.showMessageDialog(null, "Has salido de Carroflex");}
+}
