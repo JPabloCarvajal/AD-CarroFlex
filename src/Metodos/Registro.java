@@ -1,20 +1,17 @@
 package Metodos;
 import Vista.*;
 import Data.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.io.*;
 import java.util.List;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 public class Registro {
-    public static void Registro(){
+    public void Registro(){
         
         List<User> nue_user = new ArrayList<User>();// En este apartado se están cargando por defecto usuarios de prueba, los cuales servirán para testear el funcionamiento base del programa
-        leerArchivo(nue_user);
-                    for (int i = 0; i < 1; i++) {
+        List<User> pUser = leerArchivo();
                     while(true){
                     String[] opt = { "Arrendador", "Arrendatario" };
                     String selec = (String) JOptionPane.showInputDialog(null, "Seleccione tipo de cuenta: ", "Tipo de cuenta", JOptionPane.PLAIN_MESSAGE, null, opt, opt[0]);
@@ -32,16 +29,27 @@ public class Registro {
                     String Pass = JOptionPane.showInputDialog(null, "Contraseña: ");
                     if(Pass==null){return;}
                     int Pric=0; 
-                    nue_user.add(new User(selec, Docu, nam, Last, Pho, Use, Pass,Pric));
+                    Map<Integer, Integer> expenses = new HashMap<>();
+                    User nuevoUsuario=new User(selec, Docu, nam, Last, Pho, Use, Pass,Pric,expenses);
+                    nue_user.add(nuevoUsuario);
                     guardarEnArchivo(nue_user);
                     JOptionPane.showMessageDialog(null, "Registro exitoso.");
-                    break;}} 
+                    break;}
     }
-    public static void leerArchivo(List<User> nue_user) {
-        try (BufferedReader reader = new BufferedReader(new FileReader("Usuario.txt"))) {
+    public ArrayList<User> leerArchivo() {
+        ArrayList<User> nue_user= new ArrayList<>();
+        FileReader fileReader=null;
+        BufferedReader bufferedReader=null;
+        try {
+            fileReader=new FileReader("Usuario.txt");
+            bufferedReader= new BufferedReader(fileReader);
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = bufferedReader.readLine()) != null) {
                 String[] parts = line.split("\\-");
+                if (line.trim().isEmpty()) {
+                // Ignorar líneas vacías
+                continue;
+                }
                 if (parts.length == 8) {
                     String selec = parts[0];
                     String Docu = parts[1];
@@ -51,17 +59,42 @@ public class Registro {
                     String Use= parts[5];
                     String Pass = parts[6];
                     int Pric = Integer.parseInt(parts[7]);
-                     nue_user.add(new User(selec, Docu, nam, Last, Pho, Use, Pass,Pric));}}     
+                    Map<Integer, Integer> expenses = new HashMap<>();
+                     User nue_user2=new User(selec, Docu, nam, Last, Pho, Use, Pass,Pric, expenses);
+                     nue_user.add(nue_user2);
+                }
+            }
+            fileReader.close();
             JOptionPane.showMessageDialog(null, "Datos leídos del usuario ");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error al leer el archivo");}} 
-    public static void guardarEnArchivo(List<User> nue_user) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter("Usuario.txt"))) {
+        } catch (Exception e) {
+            e.printStackTrace();}
+        return nue_user;
+    } 
+    public void guardarEnArchivo(List<User> nue_user) {
+      FileWriter fileWriter=null;
+      PrintWriter printWriter=null; 
+        try {
+            fileWriter= new FileWriter("Usuario.txt",true);
+            printWriter=new PrintWriter(fileWriter);
             for (User us : nue_user) {
                 String usNuevo = us.getTipo()+ "-" + us.getDoc() + "-" + us.getName() + "-" + us.getLastN()+ "-" + us.getPhone() + "-" + us.getUserN() +  "-" +us.getPassw() + "-" + us.getPrice(); 
-                writer.write(usNuevo);
-                writer.newLine();}      
+                printWriter.println(usNuevo);
+                }      
             JOptionPane.showMessageDialog(null, "Datos guardados");
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error al guardar datos");}}  
+        } catch (IOException e) {                 
+                JOptionPane.showMessageDialog(null, "Error al guardar datos");
+                e.printStackTrace();
+        }finally{
+            try{
+                if(printWriter!= null){
+                    printWriter.close();
+                }
+                if(fileWriter != null){ 
+                    fileWriter.close();
+                }
+            }catch (IOException e){
+                e.printStackTrace(); 
+            }
+    }
+    }  
 }

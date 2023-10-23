@@ -1,13 +1,15 @@
 package Data;
 
 import java.util.List;
-
+import java.util.HashMap;
+import java.util.Map;
 
 public class User {
     private String Tipo, Name, LastN, Phone, Doc, UserN, Passw;
     private int Price;
+    private static Map<Integer, Integer> expenses;
     
-    public User(String Tipo, String Doc, String Name, String LastN, String Phone, String UserN, String Passw, int Price){
+    public User(String Tipo, String Doc, String Name, String LastN, String Phone, String UserN, String Passw, int Price, Map<Integer, Integer> expenses){
         this.Tipo=Tipo;
         this.Doc=Doc;
         this.Name=Name;
@@ -16,6 +18,7 @@ public class User {
         this.UserN=UserN;
         this.Passw=Passw;
         this.Price=Price;
+        this.expenses=expenses;
 
     }
     public String getTipo(){
@@ -66,6 +69,13 @@ public class User {
     public void setPrice(int Pric){
         this.Price=Pric;
     }
+    public Map<Integer, Integer> getExpenses() {
+        return expenses;
+    }
+
+    public void setExpenses(Map<Integer, Integer> expenses) {
+        this.expenses = expenses;
+    }
     //NUEVO
     private String name;
     private int price;
@@ -82,6 +92,18 @@ public class User {
 
     public void rechargeBalance(int amount) {
         setPrice(getPrice() + amount);
+    }
+        public static void agregarGastosAnuales(int año, int gastos) {
+        expenses.put(año, gastos);
+    }
+        public static int obtenerGastosParaAño(int año, int gastos) {
+        if (!expenses.containsKey(año)) {
+            expenses.put(año, gastos);
+        }else {
+            int gastosoriginales=expenses.get(año);
+            expenses.put(año,gastosoriginales+gastos);
+        }
+        return expenses.get(año);
     }
 }
 

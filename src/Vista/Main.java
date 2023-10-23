@@ -2,6 +2,7 @@ package Vista;
 import Data.*;
 import Metodos.*;
 import java.util.List;
+import java.util.Calendar;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import java.text.ParseException;
@@ -10,6 +11,11 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 public class Main {
     static Registro metodo=new Registro();
+    private static int getYearFromDate(Date date) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(date);
+    return calendar.get(Calendar.YEAR);
+}
     private static Date validarFecha(String fecha) {
         SimpleDateFormat formatoFecha = new SimpleDateFormat("dd/MM/yyyy");
         String[] partesFecha = fecha.split("/");              
@@ -28,28 +34,33 @@ public class Main {
             return fechaParseada;
         } catch (ParseException | NumberFormatException ex) {
             return null;}} // Fecha inválida                                             
-    public static void main(String[] args) {
+    public static void main(String[] args) {   
         int x;
         long valor_total= 0,valor_total2= 0;                
-        List<User> nue_user = new ArrayList <User>();// En este apartado se están cargando por defecto usuarios de prueba, los cuales servirán para testear el funcionamiento base del programa
-        metodo.leerArchivo(nue_user);
+        List<User> nue_user = metodo.leerArchivo();// En este apartado se están cargando por defecto usuarios de prueba, los cuales servirán para testear el funcionamiento base del programa      
         List<Cars> inventory = new ArrayList <Cars>();
         inventory.add(new Cars("Mazda", "Blanco", "CFE234","Bien",0,"Camilo", "||", "Sin arrendar", "||", 1000, 0));
         inventory.add(new Cars("Ferrari", "Gris", "GRE654","Regular",0,"Pedro", "||", "Sin arrendar", "||", 2000, 0));
         inventory.add(new Cars("Jeep", "Negro", "HTE723","Excelente",50,"Pedro", "Luz", "22/2/2022", "22/2/2023", 900, 1));     
         String Menu,Menu_cl,Menu_dño,Menu_fil;// Se están declarando variables
         Menu = "1. Iniciar Sesión \n2. Registrarse\n3. Salir";
+<<<<<<< HEAD
         Menu_cl = "1. Reservar Auto\n2. Ver reserv\n3. Devolver Auto\n4. Agregar dinero\n5. Revisar saldo\n6. Ver historial de alquileres\n7. Cerrar sesión";
+=======
+        Menu_cl = "1. Reservar Auto\n2. Ver reserva\n3. Devolver Auto\n4. Agregar dinero\n5. Revisar saldo\n6. Revisar gastos anuales\n7. Cerrar sesión";
+>>>>>>> 62e26eac1760e2e98fe3c096ada4104b7645e55a
         Menu_dño = "1.Autos alquilados\n2. Añadir automóviles\n3. Remover automovil\n4. Revisar saldo\n5.Cerrar sesión";
         Menu_fil= "1. Mostrar todos los autos\n2. Filtrar por marca\n3. Filtrar por color\n";
         int cnt = 1;
-        boolean isValid = true;// Se crea el menú principal del aplicativo    
-       int Menu_election =Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));     
+        boolean isValid = true;// Se crea el menú principal del aplicativo        
         User Login_usern2 = null;// Se crea variable de la clase para poder guardar información relativa a esta
         User busqueda = null;
         User busqueda2 = null; 
-        do {// Se inicializa un do while para permanecer el tiempo que desee el usuario dentro del aplicativo
-            if (Menu_election == 1) {// Se plantea el inicio de sesión con la opción 1
+        while (true){// Se inicializa un do while para permanecer el tiempo que desee el usuario dentro del aplicativo
+            try{
+            int Menu_election =Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));
+            switch(Menu_election){
+                case 1:// Se plantea el inicio de sesión con la opción 1
                 String Login_usern = JOptionPane.showInputDialog(null, "Ingrese su usuario");
                 String Login_passw = JOptionPane.showInputDialog(null, "Ingrese su contraseña");
                 // Se declara un boolean de tipo False, para que a la hora de rectificar el los valores sea cambiado a True en caso de que la condición se cumpla
@@ -82,7 +93,7 @@ public class Main {
                                         String Bra = JOptionPane.showInputDialog(null, "Marca del auto: ");
                                         String Clr = JOptionPane.showInputDialog(null, "Color del auto: ");
                                         String Mtr = JOptionPane.showInputDialog(null, "Matrícula del auto: ");
-                                        String Pro = JOptionPane.showInputDialog(null, "Propietario del auto: ");
+                                        String Pro = Login_usern2.getName();
                                         String Sta = JOptionPane.showInputDialog(null, "Estado del vehículo: ");
                                         int km = Integer.parseInt(JOptionPane.showInputDialog(null, "Kilometraje del vehículo: "));
                                         String Arr = "||";
@@ -206,11 +217,19 @@ public class Main {
                                                         autslc.setArrendatario(cdn);
                                                         autslc.setDate_p(f1);
                                                         autslc.setDate_g(f2);
+<<<<<<< HEAD
                                                         autslc.setContadorAlquileres(autslc.getContadorAlquileres()+1);
                                                         autslc.agregarAlquilerAlHistorial(cdn, f1, f2);
+=======
+                                                        autslc.setContadorAlquileres(autslc.getContadorAlquileres()+1);                                                       
+>>>>>>> 62e26eac1760e2e98fe3c096ada4104b7645e55a
                                                         break;  } }
                                                 JOptionPane.showMessageDialog(null, "Renta exitosa");
-                                                Login_usern2.setPrice(Login_usern2.getPrice()- (int)valor_total);
+                                                Date fecha=validarFecha(f1);
+                                                int year = getYearFromDate(fecha);
+                                                int total=Login_usern2.getPrice()- (int)valor_total;
+                                                User.obtenerGastosParaAño(year,(int)valor_total);
+                                                Login_usern2.setPrice(total);
                                                 for (User buscar : nue_user){
                                                     if(buscar.getName().equals(autslc.getProprietarie())){
                                                      busqueda = buscar; 
@@ -293,6 +312,11 @@ public class Main {
                                                         autslc_m.setContadorAlquileres(autslc_m.getContadorAlquileres()+1);
                                                         autslc_m.agregarAlquilerAlHistorial(cdn, f1, f2);
                                                         break; } }
+                                                Date fecha=validarFecha(f1);
+                                                int year = getYearFromDate(fecha);
+                                                int total=Login_usern2.getPrice()- (int)valor_total;
+                                                User.obtenerGastosParaAño(year,(int)valor_total);
+                                                Login_usern2.setPrice(total);
                                                 JOptionPane.showMessageDialog(null, "Renta exitosa");
                                                 Login_usern2.setPrice(Login_usern2.getPrice()- (int)valor_total);
                                                 for (User buscar : nue_user){
@@ -387,7 +411,11 @@ public class Main {
                                                         autslc_cl.agregarAlquilerAlHistorial(cdn, f1, f2);
                                                         break; } }
                                                 JOptionPane.showMessageDialog(null, "Renta exitosa");
-                                                Login_usern2.setPrice(Login_usern2.getPrice()- (int)valor_total);
+                                                Date fecha=validarFecha(f1);
+                                                int year = getYearFromDate(fecha);
+                                                int total=Login_usern2.getPrice()- (int)valor_total;
+                                                User.obtenerGastosParaAño(year,(int)valor_total);
+                                                Login_usern2.setPrice(total);
                                                 for (User buscar : nue_user){
                                                     if(buscar.getName().equals(autslc_cl.getProprietarie())){
                                                      busqueda = buscar; 
@@ -404,7 +432,8 @@ public class Main {
                                             } else {break;} } }
                                     } else if(Color==null){ break;}
                                     else{JOptionPane.showMessageDialog(null, "No hay coches disponibles con estas especificaciones.");
-                                         continue;} } }
+                                         continue;} 
+                                    break;} }
                                 men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));}  
                             if (men_cl == 2) {
                                 for (Cars name : inventory) {
@@ -514,15 +543,32 @@ public class Main {
                                 JOptionPane.showMessageDialog(null,"Saldo actual: "+Login_usern2.getPrice());
                                 men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));}
                                 if(men_cl==6){
+<<<<<<< HEAD
                                 mostrarHistorialAlquileres(inventory, Login_usern2.getName());
                             men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));
+=======
+                                    while(true){
+                                        try{
+                                        int año=Integer.parseInt(JOptionPane.showInputDialog(null,"Ingre el año a revisar: "));
+                                        if(Login_usern2.getExpenses().containsKey(año)){
+                                            JOptionPane.showMessageDialog(null,"Tus gastos en el año "+año+" son: "+"$"+Login_usern2.getExpenses().get(año));
+                                            break;
+                                        } else {
+                                            JOptionPane.showMessageDialog(null,"No tiene gastos en dicho año.");
+                                            break;
+                                        }
+                                        }catch(NumberFormatException e){JOptionPane.showMessageDialog(null,"Por favor, ingrese un año válido.");}
+                                    }
+                                    men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));
+>>>>>>> 62e26eac1760e2e98fe3c096ada4104b7645e55a
                                 }
                         }}} 
                 else {
                     JOptionPane.showMessageDialog(null, "Credenciales invalidas");}
-            Menu_election = Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));}
-            if (Menu_election == 2) {
+                break;
+                case 2:
                 metodo.Registro();
+<<<<<<< HEAD
                 Menu_election = Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));}
         } while (Menu_election != 3);
         JOptionPane.showMessageDialog(null, "Has salido de Carroflex");}
@@ -548,4 +594,17 @@ public class Main {
         );
     }
 }
+=======
+                break;
+                case 3:
+                JOptionPane.showMessageDialog(null, "Has salido de Carroflex");
+                System.exit(0);
+                break;
+          }
+            } catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Por favor, ingrese una opción válida.");
+            }   
+        }
+        }
+>>>>>>> 62e26eac1760e2e98fe3c096ada4104b7645e55a
 }
