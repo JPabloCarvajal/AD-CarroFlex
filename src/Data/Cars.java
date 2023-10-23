@@ -1,5 +1,7 @@
 package Data;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JOptionPane;
 
 
@@ -29,6 +31,7 @@ public class Cars {
         this.Date_g=Date_g;
         this.crPrecio = crPrecio;
         this.contadorAlquileres = contadorAlquileres;
+        this.historialAlquileres = new ArrayList<>();
     }
     public String getBrand(){
         return Brand;
@@ -93,5 +96,13 @@ public class Cars {
         public void showCarInfo() {
         String info = "Marca: " + getBrand() + "\n" + "Color: " + getColor() + "\n" + "Placa: " + getPlaque() + "\n" + "Arrendatario: " + getArrendatario() + "\n" + "Fecha de arriendo: " + getDate_p() + "\n" + "Fecha de devolución: " + getDate_g();
         JOptionPane.showMessageDialog(null, info);
-
-        }}
+        
+        }
+        //ver historial alquileres
+        private List<String> historialAlquileres;
+   public void agregarAlquilerAlHistorial(String arrendatario, String fechaInicio, String fechaDevolucion) {
+        String registro = arrendatario + " - " + fechaInicio + " a " + fechaDevolucion;
+        historialAlquileres.add(registro);}
+   public List<String> getHistorialAlquileres() {
+        return historialAlquileres;}
+}

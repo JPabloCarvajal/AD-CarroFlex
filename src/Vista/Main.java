@@ -39,7 +39,7 @@ public class Main {
         inventory.add(new Cars("Jeep", "Negro", "HTE723","Excelente",50,"Pedro", "Luz", "22/2/2022", "22/2/2023", 900, 1));     
         String Menu,Menu_cl,Menu_dño,Menu_fil;// Se están declarando variables
         Menu = "1. Iniciar Sesión \n2. Registrarse\n3. Salir";
-        Menu_cl = "1. Reservar Auto\n2. Ver reserv\n3. Devolver Auto\n4. Agregar dinero\n5. Revisar saldo\n6. Cerrar sesión";
+        Menu_cl = "1. Reservar Auto\n2. Ver reserv\n3. Devolver Auto\n4. Agregar dinero\n5. Revisar saldo\n6. Ver historial de alquileres\n7. Cerrar sesión";
         Menu_dño = "1.Autos alquilados\n2. Añadir automóviles\n3. Remover automovil\n4. Revisar saldo\n5.Cerrar sesión";
         Menu_fil= "1. Mostrar todos los autos\n2. Filtrar por marca\n3. Filtrar por color\n";
         int cnt = 1;
@@ -136,7 +136,7 @@ public class Main {
                                 men_dño = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_dño));}}} 
                     if ("Arrendatario".equals(tip)) {
                         int men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));
-                        while (men_cl < 6) {
+                        while (men_cl < 7) {
                             if (men_cl == 1) {
                                 List<Cars> Free = new ArrayList<Cars>();
                                 for (Cars inv : inventory) {
@@ -207,6 +207,7 @@ public class Main {
                                                         autslc.setDate_p(f1);
                                                         autslc.setDate_g(f2);
                                                         autslc.setContadorAlquileres(autslc.getContadorAlquileres()+1);
+                                                        autslc.agregarAlquilerAlHistorial(cdn, f1, f2);
                                                         break;  } }
                                                 JOptionPane.showMessageDialog(null, "Renta exitosa");
                                                 Login_usern2.setPrice(Login_usern2.getPrice()- (int)valor_total);
@@ -290,6 +291,7 @@ public class Main {
                                                         autslc_m.setDate_p(f1);
                                                         autslc_m.setDate_g(f2);
                                                         autslc_m.setContadorAlquileres(autslc_m.getContadorAlquileres()+1);
+                                                        autslc_m.agregarAlquilerAlHistorial(cdn, f1, f2);
                                                         break; } }
                                                 JOptionPane.showMessageDialog(null, "Renta exitosa");
                                                 Login_usern2.setPrice(Login_usern2.getPrice()- (int)valor_total);
@@ -382,6 +384,7 @@ public class Main {
                                                         autslc_cl.setDate_p(f1);
                                                         autslc_cl.setDate_g(f2);
                                                         autslc_cl.setContadorAlquileres(autslc_cl.getContadorAlquileres()+1);
+                                                        autslc_cl.agregarAlquilerAlHistorial(cdn, f1, f2);
                                                         break; } }
                                                 JOptionPane.showMessageDialog(null, "Renta exitosa");
                                                 Login_usern2.setPrice(Login_usern2.getPrice()- (int)valor_total);
@@ -462,6 +465,7 @@ public class Main {
                                          autslc_2.setState(estado);
                                          autslc_2.setkm(kilometraje);
                                          autslc_2.setArrendatario("||");
+                                         
                                          JOptionPane.showMessageDialog(null, "Estado y kilometraje guardados");
                                          f3 = JOptionPane.showInputDialog(null, "Ingrese la fecha de devolución (dd/MM/yyyy)");
                                          if(f3==null){
@@ -509,6 +513,10 @@ public class Main {
                                 if(men_cl==5){
                                 JOptionPane.showMessageDialog(null,"Saldo actual: "+Login_usern2.getPrice());
                                 men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));}
+                                if(men_cl==6){
+                                mostrarHistorialAlquileres(inventory, Login_usern2.getName());
+                            men_cl = Integer.parseInt(JOptionPane.showInputDialog(null, Menu_cl));
+                                }
                         }}} 
                 else {
                     JOptionPane.showMessageDialog(null, "Credenciales invalidas");}
@@ -517,4 +525,27 @@ public class Main {
                 metodo.Registro();
                 Menu_election = Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));}
         } while (Menu_election != 3);
-        JOptionPane.showMessageDialog(null, "Has salido de Carroflex");}}
+        JOptionPane.showMessageDialog(null, "Has salido de Carroflex");}
+
+        public static void mostrarHistorialAlquileres(List<Cars> inventory, String userName) {
+    List<String> historialCompleto = new ArrayList<>();
+
+    // Recorre la lista de automóviles para obtener el historial de todos los vehículos
+    for (Cars car : inventory) {
+        historialCompleto.addAll(car.getHistorialAlquileres());
+    }
+
+    if (historialCompleto.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "No tienes vehículos en tu historial de alquiler.");
+    } else {
+        // Muestra el historial completo
+        String historial = String.join("\n", historialCompleto);
+        JOptionPane.showMessageDialog(
+            null,
+            "Historial de Alquileres:\n" + historial,
+            "Historial de Alquileres",
+            JOptionPane.INFORMATION_MESSAGE
+        );
+    }
+}
+}
