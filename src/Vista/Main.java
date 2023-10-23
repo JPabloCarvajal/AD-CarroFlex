@@ -34,11 +34,10 @@ public class Main {
             return fechaParseada;
         } catch (ParseException | NumberFormatException ex) {
             return null;}} // Fecha inválida                                             
-    public static void main(String[] args) {
+    public static void main(String[] args) {   
         int x;
         long valor_total= 0,valor_total2= 0;                
-        List<User> nue_user = new ArrayList <User>();// En este apartado se están cargando por defecto usuarios de prueba, los cuales servirán para testear el funcionamiento base del programa
-        metodo.leerArchivo(nue_user);
+        List<User> nue_user = metodo.leerArchivo();// En este apartado se están cargando por defecto usuarios de prueba, los cuales servirán para testear el funcionamiento base del programa      
         List<Cars> inventory = new ArrayList <Cars>();
         inventory.add(new Cars("Mazda", "Blanco", "CFE234","Bien",0,"Camilo", "||", "Sin arrendar", "||", 1000, 0));
         inventory.add(new Cars("Ferrari", "Gris", "GRE654","Regular",0,"Pedro", "||", "Sin arrendar", "||", 2000, 0));
@@ -49,13 +48,15 @@ public class Main {
         Menu_dño = "1.Autos alquilados\n2. Añadir automóviles\n3. Remover automovil\n4. Revisar saldo\n5.Cerrar sesión";
         Menu_fil= "1. Mostrar todos los autos\n2. Filtrar por marca\n3. Filtrar por color\n";
         int cnt = 1;
-        boolean isValid = true;// Se crea el menú principal del aplicativo    
-       int Menu_election =Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));     
+        boolean isValid = true;// Se crea el menú principal del aplicativo        
         User Login_usern2 = null;// Se crea variable de la clase para poder guardar información relativa a esta
         User busqueda = null;
         User busqueda2 = null; 
-        do {// Se inicializa un do while para permanecer el tiempo que desee el usuario dentro del aplicativo
-            if (Menu_election == 1) {// Se plantea el inicio de sesión con la opción 1
+        while (true){// Se inicializa un do while para permanecer el tiempo que desee el usuario dentro del aplicativo
+            try{
+            int Menu_election =Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));
+            switch(Menu_election){
+                case 1:// Se plantea el inicio de sesión con la opción 1
                 String Login_usern = JOptionPane.showInputDialog(null, "Ingrese su usuario");
                 String Login_passw = JOptionPane.showInputDialog(null, "Ingrese su contraseña");
                 // Se declara un boolean de tipo False, para que a la hora de rectificar el los valores sea cambiado a True en caso de que la condición se cumpla
@@ -88,7 +89,7 @@ public class Main {
                                         String Bra = JOptionPane.showInputDialog(null, "Marca del auto: ");
                                         String Clr = JOptionPane.showInputDialog(null, "Color del auto: ");
                                         String Mtr = JOptionPane.showInputDialog(null, "Matrícula del auto: ");
-                                        String Pro = JOptionPane.showInputDialog(null, "Propietario del auto: ");
+                                        String Pro = Login_usern2.getName();
                                         String Sta = JOptionPane.showInputDialog(null, "Estado del vehículo: ");
                                         int km = Integer.parseInt(JOptionPane.showInputDialog(null, "Kilometraje del vehículo: "));
                                         String Arr = "||";
@@ -547,10 +548,18 @@ public class Main {
                         }}} 
                 else {
                     JOptionPane.showMessageDialog(null, "Credenciales invalidas");}
-            Menu_election = Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));}
-            if (Menu_election == 2) {
+                break;
+                case 2:
                 metodo.Registro();
-                Menu_election = Integer.parseInt(JOptionPane.showInputDialog(null, Menu,"Carroflex",JOptionPane.INFORMATION_MESSAGE));}
-        } while (Menu_election != 3);
-        JOptionPane.showMessageDialog(null, "Has salido de Carroflex");}
+                break;
+                case 3:
+                JOptionPane.showMessageDialog(null, "Has salido de Carroflex");
+                System.exit(0);
+                break;
+          }
+            } catch(NumberFormatException e){
+                JOptionPane.showMessageDialog(null, "Por favor, ingrese una opción válida.");
+            }   
+        }
+        }
 }
